@@ -9,48 +9,38 @@ pipeline {
             }
         }
 
-        stage('Clean and Compile with Maven') {
+        stage('Cleaning and Compiling with Maven') {
             steps {
-                dir('gestion-station-ski') {  // Change to your project's directory
-                    // Run Maven clean and compile
-                    sh 'mvn clean compile'
-                }
+                echo 'Running Maven clean and compile...'
+                sh 'mvn clean compile'
             }
         }
 
         stage('Unit Tests') {
             steps {
-                dir('gestion-station-ski') {  // Change to your project's directory
-                    echo 'Running Unit Tests: '
-                    sh 'mvn test'
-                }
+                echo 'Running Unit Tests: '
+                sh 'mvn test'
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
-                dir('gestion-station-ski') {  // Change to your project's directory
-                    echo 'Code Quality Analysis: '
-                    sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=123BIZERTE@cab456'
-                }
+                echo 'Code Quality Analysis: '
+                sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=123BIZERTE@cab456'
             }
         }
 
         stage('Maven Package') {
             steps {
-                dir('gestion-station-ski') {  // Change to your project's directory
-                    echo 'Creating Package: '
-                    sh 'mvn package -DskipTests'
-                }
+                echo 'Creating Package: '
+                sh 'mvn package -DskipTests'
             }
         }
 
         stage('Deploy to Nexus') {
             steps {
-                dir('gestion-station-ski') {  // Change to your project's directory
-                    echo 'Deploying to Nexus: '
-                    sh 'mvn deploy -DskipTests'
-                }
+                echo 'Deploying to Nexus: '
+                sh 'mvn deploy -DskipTests'
             }
         }
 
@@ -94,6 +84,7 @@ pipeline {
 
     }
 }
+
 
 
 
