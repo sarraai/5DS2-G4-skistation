@@ -12,35 +12,45 @@ pipeline {
         stage('Cleaning and Compiling with Maven') {
             steps {
                 echo 'Running Maven clean and compile...'
-                sh 'mvn clean compile'
+                dir('src') { // Navigate to the src directory
+                    sh 'mvn clean compile'
+                }
             }
         }
 
         stage('Unit Tests') {
             steps {
                 echo 'Running Unit Tests: '
-                sh 'mvn test'
+                dir('src') { // Navigate to the src directory
+                    sh 'mvn test'
+                }
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
                 echo 'Code Quality Analysis: '
-                sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=123BIZERTE@cab456'
+                dir('src') { // Navigate to the src directory
+                    sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=123BIZERTE@cab456'
+                }
             }
         }
 
         stage('Maven Package') {
             steps {
                 echo 'Creating Package: '
-                sh 'mvn package -DskipTests'
+                dir('src') { // Navigate to the src directory
+                    sh 'mvn package -DskipTests'
+                }
             }
         }
 
         stage('Deploy to Nexus') {
             steps {
                 echo 'Deploying to Nexus: '
-                sh 'mvn deploy -DskipTests'
+                dir('src') { // Navigate to the src directory
+                    sh 'mvn deploy -DskipTests'
+                }
             }
         }
 
@@ -84,6 +94,7 @@ pipeline {
 
     }
 }
+
 
 
 
