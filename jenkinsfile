@@ -4,7 +4,6 @@ pipeline {
 
         stage('Retrieve Code') {
             steps {
-                // Clone your GitHub repository and select the branch.
                 git branch: 'sarra', url: 'https://github.com/sarraai/5DS2-G4-skistation.git'
             }
         }
@@ -12,7 +11,7 @@ pipeline {
         stage('Cleaning and Compiling with Maven') {
             steps {
                 echo 'Running Maven clean and compile...'
-                dir('src') { // Navigate to the src directory
+                dir('src') { 
                     sh 'mvn clean compile'
                 }
             }
@@ -21,7 +20,7 @@ pipeline {
         stage('Unit Tests') {
             steps {
                 echo 'Running Unit Tests: '
-                dir('src') { // Navigate to the src directory
+                dir('src') {
                     sh 'mvn test'
                 }
             }
@@ -30,7 +29,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 echo 'Code Quality Analysis: '
-                dir('src') { // Navigate to the src directory
+                dir('src') {
                     sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=123BIZERTE@cab456'
                 }
             }
@@ -39,7 +38,7 @@ pipeline {
         stage('Maven Package') {
             steps {
                 echo 'Creating Package: '
-                dir('src') { // Navigate to the src directory
+                dir('src') {
                     sh 'mvn package -DskipTests'
                 }
             }
@@ -48,7 +47,7 @@ pipeline {
         stage('Deploy to Nexus') {
             steps {
                 echo 'Deploying to Nexus: '
-                dir('src') { // Navigate to the src directory
+                dir('src') {
                     sh 'mvn deploy -DskipTests'
                 }
             }
@@ -57,7 +56,9 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 echo 'Building Docker Image: '
-                sh 'docker build -t sarraai/skistation:1.0.0 .'
+                dir('..') { // Navigate to the parent directory if Dockerfile is in root
+                    sh 'docker build -t sarraai/skistation:1.0.0 .'
+                }
             }
         }
 
@@ -74,7 +75,7 @@ pipeline {
         stage('Start Backend and DB with Docker Compose') {
             steps {
                 echo 'Starting Backend and Database: '
-                sh 'docker compose up -d'
+                sh 'docker-compose up -d' // Ensure 'docker-compose' is available
             }
         }
 
@@ -94,6 +95,7 @@ pipeline {
 
     }
 }
+
 
 
 
