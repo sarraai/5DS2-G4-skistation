@@ -1,0 +1,88 @@
+pipeline {
+    agent any
+    stages {
+
+        stage('Retrieve Code') {
+            steps {
+                // Clone your GitHub repository and select the branch.
+                git branch: 'sarra', url: 'https://github.com/sarraai/5DS2-G4-skistation.git'
+            }
+        }
+
+        stage('Clean and Compile with Maven') {
+            steps {
+                // Run Maven clean and compile
+                sh 'mvn clean compile'
+            }
+        }
+
+        stage('Unit Tests') {
+            steps {
+                echo 'Running Unit Tests: '
+                sh 'mvn test'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                echo 'Code Quality Analysis: '
+                withCredentials([usernamePassword(credentialsId: 'sonarqube-credentials', usernameVariable: 'SONAR_USER', passwordVariable: 'SONAR_PASS')]) {
+                    sh 'mvn sonar:sonar -Dsonar.login=$SONAR_USER -Dsonar.password=$SONAR_PASS'
+                }
+            }
+        }
+
+        stage('Maven Package') {
+            steps {
+                echo 'Creating Package: '
+                sh 'mvn package -DskipTests'
+            }
+        }
+
+        stage('Deploy to Nexus') {
+            steps {
+                echo 'Deploying to Nexus: '
+                sh 'mvn deploy -DskipTests'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                echo 'Building Docker Image: '
+                sh 'docker build -t sarraai/skistation:1.0.0 .'
+            }
+        }
+
+        stage('Push to DockerHub') {
+            steps {
+                echo 'Pushing Image to DockerHub: '
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh 'docker login -u $DOCKER_USER -p $DOCKER_PASS'
+                }
+                sh 'docker push sarraai/skistation:1.0.0'
+            }
+        }
+
+        stage('Start Backend and DB with Docker Compose') {
+            steps {
+                echo 'Starting Backend and Database: '
+                sh 'docker compose up -d'
+            }
+        }
+
+        stage('Launch Prometheus') {
+            steps {
+                echo 'Launching Prometheus: '
+                sh 'docker run -d --name prometheus -p 9090:9090 prom/prometheus'
+            }
+        }
+
+        stage('Launch Grafana') {
+            steps {
+                echo 'Launching Grafana: '
+                sh 'docker run -d --name grafana -p 3000:3000 grafana/grafana'
+            }
+        }
+
+    }
+}
