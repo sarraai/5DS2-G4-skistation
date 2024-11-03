@@ -2,37 +2,38 @@ pipeline {
     agent any
     stages {
 
-        stage('Code Retrieval') {
+        stage('Retrieve Code') {
             steps {
-                // Clone the project repository and select the branch.
-                git branch: 'oumou', url: 'https://github.com/enamouchi/5-win-neural-navigators.git'
+                // Clone your GitHub repository and select the branch.
+                git branch: 'sarra', url: 'https://github.com/sarraai/5DS2-G4-skistation.git'
             }
         }
+
         stage('Clean and Compile with Maven') {
             steps {
-                // Run Maven with clean and compile commands
+                // Run Maven clean and compile
                 sh 'mvn clean compile'
             }
         }
 
-        stage('Unit Test') {
+        stage('Unit Tests') {
             steps {
-                echo 'Executing unit tests: '
-                sh 'mvn test';
+                echo 'Running Unit Tests: '
+                sh 'mvn test'
             }
         }
 
-        stage('SonarQube') {
+        stage('SonarQube Analysis') {
             steps {
-                echo 'Analyzing Code Quality:';
-                sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=123BIZERTE@cab456';
+                echo 'Code Quality Analysis: '
+                sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=123BIZERTE@cab456'
             }
         }
 
         stage('Maven Package') {
             steps {
-                echo 'Creating deliverable: ';
-                sh 'mvn package -DskipTests';
+                echo 'Creating Package: '
+                sh 'mvn package -DskipTests'
             }
         }
 
@@ -43,25 +44,27 @@ pipeline {
             }
         }
 
-        stage('Image') {
+        stage('Build Docker Image') {
             steps {
-                echo 'Creating Image: ';
-                sh 'docker build -t oumou2001/tp-foyer:1.0.0 .';
+                echo 'Building Docker Image: '
+                sh 'docker build -t sarraai/skistation:1.0.0 .'
             }
         }
 
-        stage('Dockerhub') {
+        stage('Push to DockerHub') {
             steps {
-                echo 'Push Image to Dockerhub: ';
-                sh 'docker login -u oumou2001 -p 1234goyou';
-                sh 'docker push oumou2001/tp-foyer:1.0.0';
+                echo 'Pushing Image to DockerHub: '
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh 'docker login -u $DOCKER_USER -p $DOCKER_PASS'
+                }
+                sh 'docker push sarraai/skistation:1.0.0'
             }
         }
 
-        stage('Docker-Compose') {
+        stage('Start Backend and DB with Docker Compose') {
             steps {
-                echo 'Start Backend + DB: ';
-                sh 'docker compose up -d';
+                echo 'Starting Backend and Database: '
+                sh 'docker compose up -d'
             }
         }
 
@@ -78,6 +81,8 @@ pipeline {
                 sh 'docker run -d --name grafana -p 3000:3000 grafana/grafana'
             }
         }
+
     }
 }
+
 
