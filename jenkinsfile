@@ -1,11 +1,9 @@
 pipeline {
     agent any
     stages {
-
         stage('Retrieve Code') {
             steps {
                 echo 'Cloning repository...'
-                // Clone your GitHub repository and select the branch.
                 git branch: 'sarra', url: 'https://github.com/sarraai/5DS2-G4-skistation.git'
             }
         }
@@ -20,45 +18,35 @@ pipeline {
         stage('Cleaning and Compiling with Maven') {
             steps {
                 echo 'Running Maven clean and compile...'
-                dir('src') {
-                    sh 'mvn clean compile'
-                }
+                sh 'mvn -f src/pom.xml clean compile' // Specify pom.xml location
             }
         }
 
         stage('Unit Tests') {
             steps {
                 echo 'Running Unit Tests: '
-                dir('src') {
-                    sh 'mvn test'
-                }
+                sh 'mvn -f src/pom.xml test' // Specify pom.xml location
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
                 echo 'Code Quality Analysis: '
-                dir('src') {
-                    sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=123BIZERTE@cab456'
-                }
+                sh 'mvn -f src/pom.xml sonar:sonar -Dsonar.login=admin -Dsonar.password=123BIZERTE@cab456' // Specify pom.xml location
             }
         }
 
         stage('Maven Package') {
             steps {
                 echo 'Creating Package: '
-                dir('src') {
-                    sh 'mvn package -DskipTests'
-                }
+                sh 'mvn -f src/pom.xml package -DskipTests' // Specify pom.xml location
             }
         }
 
         stage('Deploy to Nexus') {
             steps {
                 echo 'Deploying to Nexus: '
-                dir('src') {
-                    sh 'mvn deploy -DskipTests'
-                }
+                sh 'mvn -f src/pom.xml deploy -DskipTests' // Specify pom.xml location
             }
         }
 
@@ -110,6 +98,7 @@ pipeline {
         }
     }
 }
+
 
 
 
