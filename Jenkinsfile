@@ -58,7 +58,7 @@ stage('SonarQube') {
         stage('Docker Image Creation') {
             steps {
                 echo 'Building Docker Image...'
-                sh 'docker build -t 5ds2-g4-skistation .'
+                sh 'docker build -t sarraaissaoui/skistation:1.0.0 .';
             }
         }
 
