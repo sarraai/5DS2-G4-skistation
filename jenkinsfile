@@ -31,14 +31,13 @@ pipeline {
             }
         }
 
-
-
-stage('MVN VERIFY') {
-    steps {
-        echo "Maven Test...";
-        //sh 'mvn -f gestion-station-ski/pom.xml  test' // Update path to your pom.xml;
-    }
-}
+//4. SonarQube 
+stage('SonarQube') {
+            steps {
+                echo 'Analyse the quality of code : ';
+                sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=123BIZERTE@cab456';
+            }
+        }
 
 
         // 4. Docker Image Creation
