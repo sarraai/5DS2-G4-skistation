@@ -31,12 +31,12 @@ pipeline {
             }
         }
 
-stage("Unit Tests") {
-            steps {
-                echo "Running unit tests and generating JaCoCo Report"
-                sh 'mvn verify'
-            }
-        }
+stage('MVN VERIFY') {
+    steps {
+        echo 'Running Maven verify...'
+        sh 'mvn -f gestion-station-ski/pom.xml verify' // Update path to your pom.xml
+    }
+}
 
 
         // 4. Docker Image Creation
