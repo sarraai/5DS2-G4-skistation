@@ -36,7 +36,7 @@ pipeline {
         stage('Unit Testing with JUnit') {
             steps {
                 echo 'Executing Unit Tests...'
-                sh 'mvn test';
+                sh 'mvn -f gestion-station-ski/pom.xml test'; // Use the correct path to pom.xml
             }
         }
 
@@ -45,7 +45,7 @@ pipeline {
             steps {
                 echo 'Running SonarQube analysis...'
                 withCredentials([string(credentialsId: 'sonar_token', variable: 'SONAR_TOKEN')]) {
-                    sh 'mvn sonar:sonar -Dsonar.projectKey=5ds2_g1_kaddem -Dsonar.host.url=http://localhost:9000 -Dsonar.login=$SONAR_TOKEN'
+                    sh 'mvn -f gestion-station-ski/pom.xml sonar:sonar -Dsonar.projectKey=5ds2_g1_kaddem -Dsonar.host.url=http://localhost:9000 -Dsonar.login=$SONAR_TOKEN'
                 }
             }
         }
@@ -54,7 +54,7 @@ pipeline {
         stage('Maven Package') {
             steps {
                 echo 'Packaging application...'
-                sh 'mvn package -DskipTests'
+                sh 'mvn -f gestion-station-ski/pom.xml package -DskipTests'
             }
         }
 
@@ -62,7 +62,7 @@ pipeline {
         stage('Nexus Deployment') {
             steps {
                 echo 'Deploying to Nexus...'
-                sh 'mvn deploy -DskipTests'
+                sh 'mvn -f gestion-station-ski/pom.xml deploy -DskipTests'
             }
         }
 
@@ -132,3 +132,4 @@ pipeline {
         }
     }
 }
+
