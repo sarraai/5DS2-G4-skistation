@@ -32,7 +32,82 @@ pipeline {
             }
         }
 
-        // 4. Check Database Connection
+        // 4. Unit Testing with JUnit
+        stage('Unit Testing with JUnit') {
+            steps {
+                echo 'Executing Unit Tests...'
+                sh 'mvn -f gestion-station-ski/pom.xml test' // Ensure correct path
+            }
+        }
+
+        // 5. Code Quality Check with SonarQube
+        stage('SonarQube Analysis') {
+            steps {
+                echo 'Running SonarQube analysis...'
+                withCredentials([string(credentialsId: 'devops_project', variable: 'dckr_pat_7kWM12VTv9eWmsh0_bGuqOnIzis')]) {
+                    sh 'mvn sonar:sonar -Dsonar.projectKey=5ds2_g1_kaddem -Dsonar.host.url=http://localhost:9000 -Dsonar.login=$SONAR_TOKEN'
+                }
+            }
+        }
+
+        // 6. Package Artifact with Maven
+        stage('Maven Package') {
+            steps {
+                echo 'Packaging application...'
+                sh 'mvn package -DskipTests'
+            }
+        }
+
+        // 7. Deploy to Nexus Repository
+        stage('Nexus Deployment') {
+            steps {
+                echo 'Deploying to Nexus...'
+                sh 'mvn deploy -DskipTests'
+            }
+        }
+
+        // 8. Docker Image Creation
+        stage('Docker Image Creation') {
+            steps {
+                echo 'Building Docker Image...'
+                sh 'docker build -t khaledchaabouni/5ds2_g1_kaddem:1.0.0 .'
+            }
+        }
+
+        // 9. Push Docker Image to Docker Hub
+        stage('Push Docker Image to Docker Hub') {
+            steps {
+                echo 'Pushing Docker Image to Docker Hub...'
+                sh 'docker login -u khaledchaabouni -p dckr_pat_7kWM12VTv9eWmsh0_bGuqOnIzis'
+                sh 'docker push khaledchaabouni/5ds2_g1_kaddem:1.0.0'
+            }
+        }
+
+        // 10. Docker Compose to Launch Services
+        stage('Docker Compose Setup') {
+            steps {
+                echo 'Starting services with Docker Compose...'
+                sh 'docker compose up -d'
+            }
+        }
+
+        // 11. Launch Prometheus
+        stage('Launch Prometheus') {
+            steps {
+                echo 'Starting Prometheus for monitoring...'
+                sh 'docker run -d --name prometheus -p 9090:9090 prom/prometheus'
+            }
+        }
+
+        // 12. Launch Grafana
+        stage('Launch Grafana') {
+            steps {
+                echo 'Starting Grafana for visualization...'
+                sh 'docker run -d --name grafana -p 3000:3000 grafana/grafana'
+            }
+        }
+
+        // 13. Check Database Connection
         stage('CHECK DATABASE CONNECTION') {
             steps {
                 script {
@@ -53,82 +128,8 @@ pipeline {
                 }
             }
         }
-
-        // 5. Unit Testing with JUnit
-        stage('Unit Testing with JUnit') {
-            steps {
-                echo 'Executing Unit Tests...'
-                sh 'mvn -f gestion-station-ski/pom.xml test' // Ensure correct path
-            }
-        }
-
-        // 6. Code Quality Check with SonarQube
-        stage('SonarQube Analysis') {
-            steps {
-                echo 'Running SonarQube analysis...'
-                withCredentials([string(credentialsId: 'devops_project', variable: 'dckr_pat_7kWM12VTv9eWmsh0_bGuqOnIzis')]) {
-                    sh 'mvn sonar:sonar -Dsonar.projectKey=5ds2_g1_kaddem -Dsonar.host.url=http://localhost:9000 -Dsonar.login=$SONAR_TOKEN'
-                }
-            }
-        }
-
-        // 7. Package Artifact with Maven
-        stage('Maven Package') {
-            steps {
-                echo 'Packaging application...'
-                sh 'mvn package -DskipTests'
-            }
-        }
-
-        // 8. Deploy to Nexus Repository
-        stage('Nexus Deployment') {
-            steps {
-                echo 'Deploying to Nexus...'
-                sh 'mvn deploy -DskipTests'
-            }
-        }
-
-        // 9. Docker Image Creation
-        stage('Docker Image Creation') {
-            steps {
-                echo 'Building Docker Image...'
-                sh 'docker build -t khaledchaabouni/5ds2_g1_kaddem:1.0.0 .'
-            }
-        }
-
-        // 10. Push Docker Image to Docker Hub
-        stage('Push Docker Image to Docker Hub') {
-            steps {
-                echo 'Pushing Docker Image to Docker Hub...'
-                sh 'docker login -u khaledchaabouni -p dckr_pat_7kWM12VTv9eWmsh0_bGuqOnIzis'
-                sh 'docker push khaledchaabouni/5ds2_g1_kaddem:1.0.0'
-            }
-        }
-
-        // 11. Docker Compose to Launch Services
-        stage('Docker Compose Setup') {
-            steps {
-                echo 'Starting services with Docker Compose...'
-                sh 'docker compose up -d'
-            }
-        }
-
-        // 12. Launch Prometheus
-        stage('Launch Prometheus') {
-            steps {
-                echo 'Starting Prometheus for monitoring...'
-                sh 'docker run -d --name prometheus -p 9090:9090 prom/prometheus'
-            }
-        }
-
-        // 13. Launch Grafana
-        stage('Launch Grafana') {
-            steps {
-                echo 'Starting Grafana for visualization...'
-                sh 'docker run -d --name grafana -p 3000:3000 grafana/grafana'
-            }
-        }
     }
 }
+
 
 
