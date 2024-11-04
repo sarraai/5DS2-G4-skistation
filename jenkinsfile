@@ -1,4 +1,4 @@
-pipeline {
+*pipeline {
     environment {
         registry = "sarraai/skiexam"
         registryCredential = 'dockerHub'
@@ -32,21 +32,21 @@ pipeline {
             }
         }
 
-        // 4. Maven Tests
+        // 4. Maven Package
+        stage('Maven Package') {
+            steps {
+                echo 'Packaging application...'
+                sh 'mvn -f gestion-station-ski/pom.xml package -DskipTests'
+            }
+        }
+
+        // 5. Maven Tests
         stage('MVN TESTS') {
             steps {
                 echo 'Running Maven tests...'
                 dir('gestion-station-ski') { // Navigate to the correct directory
                     sh 'mvn test' // Execute Maven tests
                 }
-            }
-        }
-
-        // 5. Package Artifact with Maven
-        stage('Maven Package') {
-            steps {
-                echo 'Packaging application...'
-                sh 'mvn -f gestion-station-ski/pom.xml package -DskipTests'
             }
         }
 
