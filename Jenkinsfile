@@ -24,10 +24,10 @@ pipeline {
         }
 
         // 3. Artifact Construction
-        stage('ARTIFACT CONSTRUCTION') {
+        stage('COMPILATION') {
             steps {
                 echo 'Building Maven package...'
-                sh 'mvn -f gestion-station-ski/pom.xml package -Dmaven.test.skip=true -P test-coverage' // Ensure correct path
+                sh 'mvn compile' // Ensure correct path
             }
         }
 
