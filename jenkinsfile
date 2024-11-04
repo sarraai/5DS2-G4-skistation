@@ -18,28 +18,28 @@ pipeline {
         stage('MVN CLEAN') {
             steps {
                 echo 'Running Maven clean...'
-                sh 'mvn -f pom.xml clean'
+                sh 'mvn -f gestion-station-ski/gestion-station-ski/pom.xml clean'
             }
         }
 
         stage('ARTIFACT CONSTRUCTION') {
             steps {
                 echo 'Building Maven package...'
-                sh 'mvn -f pom.xml package -Dmaven.test.skip=true -P test-coverage'
+                sh 'mvn -f gestion-station-ski/gestion-station-ski/pom.xml package -Dmaven.test.skip=true -P test-coverage'
             }
         }
 
         stage('MVN TESTS') {
             steps {
                 echo 'Running Maven tests...'
-                sh 'mvn -f pom.xml test'
+                sh 'mvn -f gestion-station-ski/gestion-station-ski/pom.xml test'
             }
         }
 
         stage('NEXUS') {
             steps {
                 echo 'Deploying artifact to Nexus...'
-                sh 'mvn -f pom.xml deploy'
+                sh 'mvn -f gestion-station-ski/gestion-station-ski/pom.xml deploy'
             }
         }
 
@@ -69,11 +69,4 @@ pipeline {
                     echo 'Starting services with Docker Compose...'
                     sh """
                         export REGISTRY=${registry}
-                        export BUILD_NUMBER=${env.BUILD_NUMBER}
-                        docker-compose -f docker-compose.yml up -d
-                    """
-                }
-            }
-        }
-    }
-}
+                        export BUILD
