@@ -32,11 +32,13 @@ pipeline {
             }
         }
 
-       // 4. Code Quality Check with SonarQube
+        // 4. Code Quality Check with SonarQube
         stage('SonarQube Analysis') {
             steps {
-                echo 'Running SonarQube analysis...';
-                sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=123BIZERTE@cab456';
+                echo 'Running SonarQube analysis...'
+                withCredentials([usernamePassword(credentialsId: 'sonar_credentials', usernameVariable: 'SONAR_USER', passwordVariable: 'SONAR_PASSWORD')]) {
+                    sh "mvn sonar:sonar -Dsonar.projectKey=${sonarProjectKey} -Dsonar.login=${SONAR_USER} -Dsonar.password=${SONAR_PASSWORD}"
+                }
             }
         }
 
