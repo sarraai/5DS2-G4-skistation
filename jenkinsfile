@@ -32,11 +32,11 @@ pipeline {
             }
         }
 
-        // 4. Unit Testing with JUnit
+        // 4. JUnit Test Execution
         stage('Unit Testing with JUnit') {
             steps {
                 echo 'Executing Unit Tests...'
-                sh 'mvn -f gestion-station-ski/pom.xml test' // Ensure correct path
+                sh 'mvn test';
             }
         }
 
