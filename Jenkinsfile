@@ -19,7 +19,7 @@ pipeline {
         stage('MVN CLEAN') {
             steps {
                 echo 'Running Maven clean...'
-                sh 'mvn -f gestion-station-ski/pom.xml clean'
+                sh 'mvn clean'
             }
         }
 
