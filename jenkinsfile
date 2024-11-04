@@ -32,18 +32,15 @@ pipeline {
             }
         }
 
-  // 4. Code Quality Check with SonarQube
+        // 4. Code Quality Check with SonarQube
         stage('SonarQube Analysis') {
             steps {
                 echo 'Running SonarQube analysis...'
                 dir('/var/lib/jenkins/workspace/pipeline/gestion-station-ski') {
-    sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=123BIZERTE@cab456'
-}
+                    sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=123BIZERTE@cab456'
                 }
             }
         }
-
-
 
         // 5. Package Artifact with Maven
         stage('Maven Package') {
