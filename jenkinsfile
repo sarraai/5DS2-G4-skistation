@@ -19,7 +19,7 @@ pipeline {
         stage('MVN CLEAN') {
             steps {
                 echo 'Running Maven clean...'
-                //sh 'mvn -f gestion-station-ski/pom.xml clean'
+                sh 'mvn -f gestion-station-ski/pom.xml clean'
             }
         }
 
@@ -35,7 +35,7 @@ pipeline {
 
 stage('MVN VERIFY') {
     steps {
-        sh 'mvn -f gestion-station-ski/pom.xml  test' // Update path to your pom.xml
+        //sh 'mvn -f gestion-station-ski/pom.xml  test' // Update path to your pom.xml
     }
 }
 
