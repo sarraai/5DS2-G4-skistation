@@ -20,7 +20,7 @@ pipeline {
         stage('MVN CLEAN') {
             steps {
                 echo 'Running Maven clean...'
-                sh 'mvn -f gestion-station-ski/pom.xml clean' // Update path here if necessary
+                sh 'mvn -f gestion-station-ski/gestion-station-ski/pom.xml clean' // Update path here if necessary
             }
         }
 
@@ -28,15 +28,15 @@ pipeline {
         stage('ARTIFACT CONSTRUCTION') {
             steps {
                 echo 'Building Maven package...'
-                sh 'mvn -f gestion-station-ski/pom.xml package -Dmaven.test.skip=true -P test-coverage' // Ensure correct path
+                sh 'mvn -f gestion-station-ski/gestion-station-ski/pom.xml package -Dmaven.test.skip=true -P test-coverage' // Ensure correct path
             }
         }
 
-        // 4. JUnit Test Execution
+        // 4. Unit Testing with JUnit
         stage('Unit Testing with JUnit') {
             steps {
                 echo 'Executing Unit Tests...'
-                sh 'mvn test';
+                sh 'mvn -f gestion-station-ski/gestion-station-ski/pom.xml test' // Ensure correct path
             }
         }
 
@@ -54,7 +54,7 @@ pipeline {
         stage('Maven Package') {
             steps {
                 echo 'Packaging application...'
-                sh 'mvn package -DskipTests'
+                sh 'mvn -f gestion-station-ski/gestion-station-ski/pom.xml package -DskipTests'
             }
         }
 
@@ -62,7 +62,7 @@ pipeline {
         stage('Nexus Deployment') {
             steps {
                 echo 'Deploying to Nexus...'
-                sh 'mvn deploy -DskipTests'
+                sh 'mvn -f gestion-station-ski/gestion-station-ski/pom.xml deploy -DskipTests'
             }
         }
 
