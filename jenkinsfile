@@ -20,7 +20,7 @@ pipeline {
         stage('MVN CLEAN') {
             steps {
                 echo 'Running Maven clean...'
-                sh 'mvn -f gestion-station-ski/gestion-station-ski/pom.xml clean' // Update path here if necessary
+                sh 'mvn clean'
             }
         }
 
@@ -28,7 +28,7 @@ pipeline {
         stage('ARTIFACT CONSTRUCTION') {
             steps {
                 echo 'Building Maven package...'
-                sh 'mvn -f gestion-station-ski/gestion-station-ski/pom.xml package -Dmaven.test.skip=true -P test-coverage' // Ensure correct path
+                sh 'mvn package -Dmaven.test.skip=true -P test-coverage'
             }
         }
 
@@ -36,99 +36,5 @@ pipeline {
         stage('Unit Testing with JUnit') {
             steps {
                 echo 'Executing Unit Tests...'
-                sh 'mvn -f gestion-station-ski/gestion-station-ski/pom.xml test' // Ensure correct path
-            }
-        }
-
-        // 5. Code Quality Check with SonarQube
-        stage('SonarQube Analysis') {
-            steps {
-                echo 'Running SonarQube analysis...'
-                withCredentials([string(credentialsId: 'sonar_token', variable: 'SONAR_TOKEN')]) {
-                    sh 'mvn sonar:sonar -Dsonar.projectKey=5ds2_g1_kaddem -Dsonar.host.url=http://localhost:9000 -Dsonar.login=$SONAR_TOKEN'
-                }
-            }
-        }
-
-        // 6. Package Artifact with Maven
-        stage('Maven Package') {
-            steps {
-                echo 'Packaging application...'
-                sh 'mvn -f gestion-station-ski/gestion-station-ski/pom.xml package -DskipTests'
-            }
-        }
-
-        // 7. Deploy to Nexus Repository
-        stage('Nexus Deployment') {
-            steps {
-                echo 'Deploying to Nexus...'
-                sh 'mvn -f gestion-station-ski/gestion-station-ski/pom.xml deploy -DskipTests'
-            }
-        }
-
-        // 8. Docker Image Creation
-        stage('Docker Image Creation') {
-            steps {
-                echo 'Building Docker Image...'
-                sh 'docker build -t khaledchaabouni/5ds2_g1_kaddem:1.0.0 .'
-            }
-        }
-
-        // 9. Push Docker Image to Docker Hub
-        stage('Push Docker Image to Docker Hub') {
-            steps {
-                echo 'Pushing Docker Image to Docker Hub...'
-                withCredentials([usernamePassword(credentialsId: 'dockerHub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                    sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
-                    sh 'docker push khaledchaabouni/5ds2_g1_kaddem:1.0.0'
-                }
-            }
-        }
-
-        // 10. Docker Compose to Launch Services
-        stage('Docker Compose Setup') {
-            steps {
-                echo 'Starting services with Docker Compose...'
-                sh 'docker compose up -d'
-            }
-        }
-
-        // 11. Launch Prometheus
-        stage('Launch Prometheus') {
-            steps {
-                echo 'Starting Prometheus for monitoring...'
-                sh 'docker run -d --name prometheus -p 9090:9090 prom/prometheus'
-            }
-        }
-
-        // 12. Launch Grafana
-        stage('Launch Grafana') {
-            steps {
-                echo 'Starting Grafana for visualization...'
-                sh 'docker run -d --name grafana -p 3000:3000 grafana/grafana'
-            }
-        }
-
-        // 13. Check Database Connection
-        stage('CHECK DATABASE CONNECTION') {
-            steps {
-                script {
-                    echo 'Checking database connection...'
-                    withCredentials([usernamePassword(credentialsId: 'mysql-credentials', usernameVariable: 'DB_USER', passwordVariable: 'DB_PASSWORD')]) {
-                        def dbHost = 'your_database_host' // Replace with your actual database host
-                        def dbPort = 'your_database_port' // Replace with your actual database port
-
-                        // Attempt to connect to the database
-                        try {
-                            sh """
-                                echo "SELECT 1;" | mysql -h ${dbHost} -P ${dbPort} -u ${DB_USER} -p${DB_PASSWORD}
-                            """
-                        } catch (err) {
-                            error("Database connection failed: ${err}")
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
+                sh 'mvn test'
+      
