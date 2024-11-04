@@ -32,17 +32,7 @@ pipeline {
             }
         }
 
-        // 4. JUnit Test Execution
-       stage('Unit Testing with JUnit') {
-    steps {
-        echo 'Executing Unit Tests...';
-        dir('C:/Users/aisar/Downloads/gestion-station-ski/gestion-station-ski') {
-            sh 'mvn test';
-        }
-    }
-}
-
-        // 5. Code Quality Check with SonarQube
+        // 4. Code Quality Check with SonarQube
         stage('SonarQube Analysis') {
             steps {
                 echo 'Running SonarQube analysis...'
@@ -52,7 +42,7 @@ pipeline {
             }
         }
 
-        // 6. Package Artifact with Maven
+        // 5. Package Artifact with Maven
         stage('Maven Package') {
             steps {
                 echo 'Packaging application...'
@@ -60,7 +50,7 @@ pipeline {
             }
         }
 
-        // 7. Deploy to Nexus Repository
+        // 6. Deploy to Nexus Repository
         stage('Nexus Deployment') {
             steps {
                 echo 'Deploying to Nexus...'
@@ -68,7 +58,7 @@ pipeline {
             }
         }
 
-        // 8. Docker Image Creation
+        // 7. Docker Image Creation
         stage('Docker Image Creation') {
             steps {
                 echo 'Building Docker Image...'
@@ -76,7 +66,7 @@ pipeline {
             }
         }
 
-        // 9. Push Docker Image to Docker Hub
+        // 8. Push Docker Image to Docker Hub
         stage('Push Docker Image to Docker Hub') {
             steps {
                 echo 'Pushing Docker Image to Docker Hub...'
@@ -87,7 +77,7 @@ pipeline {
             }
         }
 
-        // 10. Docker Compose to Launch Services
+        // 9. Docker Compose to Launch Services
         stage('Docker Compose Setup') {
             steps {
                 echo 'Starting services with Docker Compose...'
@@ -95,7 +85,7 @@ pipeline {
             }
         }
 
-        // 11. Launch Prometheus
+        // 10. Launch Prometheus
         stage('Launch Prometheus') {
             steps {
                 echo 'Starting Prometheus for monitoring...'
@@ -103,7 +93,7 @@ pipeline {
             }
         }
 
-        // 12. Launch Grafana
+        // 11. Launch Grafana
         stage('Launch Grafana') {
             steps {
                 echo 'Starting Grafana for visualization...'
@@ -111,7 +101,7 @@ pipeline {
             }
         }
 
-        // 13. Check Database Connection
+        // 12. Check Database Connection
         stage('CHECK DATABASE CONNECTION') {
             steps {
                 script {
@@ -132,6 +122,15 @@ pipeline {
                 }
             }
         }
+
+        // 13. JUnit Test Execution
+        stage('Unit Testing with JUnit') {
+            steps {
+                echo 'Executing Unit Tests...';
+                dir('C:/Users/aisar/Downloads/gestion-station-ski/gestion-station-ski') {
+                    sh 'mvn test';
+                }
+            }
+        }
     }
 }
-
