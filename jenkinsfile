@@ -32,7 +32,7 @@ pipeline {
             }
         }
 
-        // 4. Maven Package
+        // 4. Package Artifact with Maven
         stage('Maven Package') {
             steps {
                 echo 'Packaging application...'
@@ -40,7 +40,15 @@ pipeline {
             }
         }
 
-        // 5. Maven Tests
+        // 5. Docker Image Creation
+        stage('Docker Image Creation') {
+            steps {
+                echo 'Building Docker Image...'
+                sh 'docker build -t khaledchaabouni/5ds2_g1_kaddem:1.0.0 .'
+            }
+        }
+
+        // 6. Maven Tests
         stage('MVN TESTS') {
             steps {
                 echo 'Running Maven tests...'
@@ -50,19 +58,11 @@ pipeline {
             }
         }
 
-        // 6. Deploy to Nexus Repository
+        // 7. Deploy to Nexus Repository
         stage('Nexus Deployment') {
             steps {
                 echo 'Deploying to Nexus...'
                 sh 'mvn -f gestion-station-ski/pom.xml deploy -DskipTests'
-            }
-        }
-
-        // 7. Docker Image Creation
-        stage('Docker Image Creation') {
-            steps {
-                echo 'Building Docker Image...'
-                sh 'docker build -t khaledchaabouni/5ds2_g1_kaddem:1.0.0 .'
             }
         }
 
@@ -132,3 +132,4 @@ pipeline {
         }
     }
 }
+
