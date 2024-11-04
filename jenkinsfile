@@ -35,7 +35,7 @@ pipeline {
 
 stage('MVN VERIFY') {
     steps {
-        sh 'mvn test' // Update path to your pom.xml
+        sh 'mvn -f gestion-station-ski/pom.xml  test' // Update path to your pom.xml
     }
 }
 
