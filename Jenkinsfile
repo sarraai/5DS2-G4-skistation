@@ -39,6 +39,20 @@ stage('SonarQube') {
             }
         }
 
+        stage('Maven Package') {
+            steps {
+                echo 'Création du livrable : ';
+                sh 'mvn package -DskipTests';
+            }
+        }
+
+         stage('Deploy to Nexus') {
+            steps {
+                echo 'Déploiement sur Nexus : '
+                sh 'mvn deploy -DskipTests'
+            }
+        }
+
 
         // 4. Docker Image Creation
         stage('Docker Image Creation') {
@@ -69,13 +83,7 @@ stage('SonarQube') {
             }
         }
 
-        // 7. Deploy to Nexus Repository
-        stage('Nexus Deployment') {
-            steps {
-                echo 'Deploying to Nexus...'
-                sh 'mvn -f gestion-station-ski/pom.xml deploy -DskipTests'
-            }
-        }
+        
 
         // 8. Docker Compose to Launch Services
         stage('Docker Compose Setup') {
