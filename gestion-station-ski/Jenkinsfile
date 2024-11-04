@@ -38,6 +38,20 @@ stage('SonarQube') {
                 sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=123BIZERTE@cab456';
             }
         }
+// Maven Package
+        stage('Maven Package') {
+            steps {
+                echo 'Création du livrable : ';
+                sh 'mvn package -DskipTests';
+            }
+        }
+
+         stage('Deploy to Nexus') {
+            steps {
+                echo 'Déploiement sur Nexus : '
+                sh 'mvn deploy -DskipTests'
+            }
+        }
 
 
         // 4. Docker Image Creation
