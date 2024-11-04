@@ -66,10 +66,7 @@ stage('MVN VERIFY') {
         // 6. Maven Tests
         stage('MVN TESTS') {
             steps {
-                echo 'Running Maven tests...'
-                dir('gestion-station-ski') { // Navigate to the correct directory
-                    sh 'mvn test' // Execute Maven tests
-                }
+                sh 'mvn test'
             }
         }
 
