@@ -36,7 +36,9 @@ pipeline {
         stage('MVN TESTS') {
             steps {
                 echo 'Running Maven tests...'
-                sh 'mvn test' // Execute Maven tests
+                dir('gestion-station-ski') { // Navigate to the correct directory
+                    sh 'mvn test' // Execute Maven tests
+                }
             }
         }
 
@@ -125,8 +127,9 @@ pipeline {
         stage('Unit Testing with JUnit') {
             steps {
                 echo 'Executing Unit Tests...';
-                dir('C:/Users/aisar/Downloads/gestion-station-ski/gestion-station-ski') {
-                    sh 'mvn test';
+                sh 'mvn test';
+            }
+        }
                 }
             }
         }
