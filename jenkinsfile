@@ -1,7 +1,7 @@
 pipeline {
     environment {
-        registry = "sarraai/skiexam"  // Your Docker registry path
-        registryCredential = 'dockerHub'  // Jenkins credential ID for DockerHub
+        registry = "sarraai/skiexam"
+        registryCredential = 'dockerHub'
         dockerImage = ''
     }
     agent any
@@ -18,28 +18,28 @@ pipeline {
         stage('MVN CLEAN') {
             steps {
                 echo 'Running Maven clean...'
-                sh 'mvn -f src/pom.xml clean'
+                sh 'mvn -f gestion-station-ski/src/pom.xml clean'
             }
         }
 
         stage('ARTIFACT CONSTRUCTION') {
             steps {
                 echo 'Building Maven package...'
-                sh 'mvn -f src/pom.xml package -Dmaven.test.skip=true -P test-coverage'
+                sh 'mvn -f gestion-station-ski/src/pom.xml package -Dmaven.test.skip=true -P test-coverage'
             }
         }
 
         stage('MVN TESTS') {
             steps {
                 echo 'Running Maven tests...'
-                sh 'mvn -f src/pom.xml test'
+                sh 'mvn -f gestion-station-ski/src/pom.xml test'
             }
         }
 
         stage('NEXUS') {
             steps {
                 echo 'Deploying artifact to Nexus...'
-                sh 'mvn -f src/pom.xml deploy'
+                sh 'mvn -f gestion-station-ski/src/pom.xml deploy'
             }
         }
 
@@ -70,13 +70,14 @@ pipeline {
                     sh """
                         export REGISTRY=${registry}
                         export BUILD_NUMBER=${env.BUILD_NUMBER}
-                        docker-compose -f src/docker-compose.yml up -d
+                        docker-compose -f gestion-station-ski/src/docker-compose.yml up -d
                     """
                 }
             }
         }
     }
 }
+
 
 
 
