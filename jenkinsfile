@@ -20,7 +20,7 @@ pipeline {
         stage('MVN CLEAN') {
             steps {
                 echo 'Running Maven clean...'
-                sh 'mvn -f gestion-station-ski/pom.xml clean' // Update path here if necessary
+                sh 'mvn -f gestion-station-ski/pom.xml clean' // Update path if necessary
             }
         }
 
@@ -32,7 +32,7 @@ pipeline {
             }
         }
 
-       // 4. Maven Tests
+        // 4. Maven Tests
         stage('MVN TESTS') {
             steps {
                 echo 'Running Maven tests...'
@@ -126,11 +126,8 @@ pipeline {
         // 13. JUnit Test Execution
         stage('Unit Testing with JUnit') {
             steps {
-                echo 'Executing Unit Tests...';
-                sh 'mvn test';
-            }
-        }
-                }
+                echo 'Executing Unit Tests...'
+                sh 'mvn test'
             }
         }
     }
