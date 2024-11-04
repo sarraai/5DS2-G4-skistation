@@ -7,7 +7,6 @@ pipeline {
     agent any
 
     stages {
-        
         // 1. Checkout SCM
         stage('CHECKOUT GIT') {
             steps {
@@ -31,19 +30,6 @@ pipeline {
                 sh 'mvn -f gestion-station-ski/pom.xml package -Dmaven.test.skip=true -P test-coverage' // Ensure correct path
             }
         }
-
-//6.chekcout git
-stages {
-        
-        stage('CHECKOUT GIT') {
-            steps {
-                script {
-                    // Checkout the specified branch from your GitHub repository
-                    git branch: 'sarra', url: 'https://github.com/sarraai/5DS2-G4-skistation.git'
-                }
-            }
-        }
-
 
         // 4. Docker Image Creation
         stage('Docker Image Creation') {
@@ -140,5 +126,3 @@ stages {
         }
     }
 }
-
-
