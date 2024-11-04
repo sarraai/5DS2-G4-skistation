@@ -5,7 +5,7 @@ FROM openjdk:11-jre-slim
 WORKDIR /app
 
 # Expose the application port (default Spring Boot port is 8080)
-EXPOSE 8080
+EXPOSE 8089
 
 # Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
