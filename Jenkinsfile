@@ -109,27 +109,7 @@ stage('SonarQube') {
             }
         }
 
-        // 11. Check Database Connection
-        stage('CHECK DATABASE CONNECTION') {
-            steps {
-                script {
-                    echo 'Checking database connection...'
-                    withCredentials([usernamePassword(credentialsId: 'mysql-credentials', usernameVariable: 'DB_USER', passwordVariable: 'DB_PASSWORD')]) {
-                        def dbHost = 'your_database_host' // Replace with your actual database host
-                        def dbPort = 'your_database_port' // Replace with your actual database port
-
-                        // Attempt to connect to the database
-                        try {
-                            sh """
-                                echo "SELECT 1;" | mysql -h ${dbHost} -P ${dbPort} -u ${DB_USER} -p${DB_PASSWORD}
-                            """
-                        } catch (err) {
-                            error("Database connection failed: ${err}")
-                        }
-                    }
-                }
-            }
-        }
+       
 
         // 12. JUnit Test Execution
         stage('Unit Testing with JUnit') {
