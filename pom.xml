@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.6.9</version>
+        <version>2.7.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>tn.esprit.spring</groupId>
@@ -14,7 +14,7 @@
     <name>gestion-station-ski</name>
     <description>Demo project for Spring Boot</description>
     <properties>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
         <maven-jar-plugin.version>3.6.3</maven-jar-plugin.version>
     </properties>
     <dependencies>
