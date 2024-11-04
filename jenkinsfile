@@ -1,4 +1,4 @@
-*pipeline {
+pipeline {
     environment {
         registry = "sarraai/skiexam"
         registryCredential = 'dockerHub'
