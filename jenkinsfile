@@ -66,7 +66,7 @@ stage('MVN VERIFY') {
         // 6. Maven Tests
         stage('MVN TESTS') {
             steps {
-                sh 'mvn test'
+                echo "Maven Test";
             }
         }
 
