@@ -39,6 +39,20 @@ pipeline {
                 sh 'mvn -f gestion-station-ski/pom.xml package -DskipTests'
             }
         }
+// 8. Push Docker Image to Docker Hub
+stage('Push Docker Image to Docker Hub') {
+    steps {
+        echo 'Pushing Docker Image to Docker Hub...'
+        withCredentials([usernamePassword(credentialsId: 'dockerHub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+            sh '''
+                echo "Logging into Docker Hub..."
+                docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+                docker push sarraai/5DS2-G4-skistation:1.0.0
+            '''
+        }
+    }
+}
+
 
         // 5. Docker Image Creation
         stage('Docker Image Creation') {
@@ -66,16 +80,6 @@ pipeline {
             }
         }
 
-        // 8. Push Docker Image to Docker Hub
-        stage('Push Docker Image to Docker Hub') {
-            steps {
-                echo 'Pushing Docker Image to Docker Hub...'
-                withCredentials([usernamePassword(credentialsId: 'dockerHub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                    sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
-                    sh 'docker push khaledchaabouni/5ds2_g1_kaddem:1.0.0'
-                }
-            }
-        }
 
         // 9. Docker Compose to Launch Services
         stage('Docker Compose Setup') {
