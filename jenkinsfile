@@ -33,12 +33,14 @@ pipeline {
         }
 
         // 4. JUnit Test Execution
-        stage('Unit Testing with JUnit') {
-            steps {
-                echo 'Executing Unit Tests...'
-                sh 'mvn -f gestion-station-ski/pom.xml test'; // Use the correct path to pom.xml
-            }
+       stage('Unit Testing with JUnit') {
+    steps {
+        echo 'Executing Unit Tests...';
+        dir('C:/Users/aisar/Downloads/gestion-station-ski/gestion-station-ski') {
+            sh 'mvn test';
         }
+    }
+}
 
         // 5. Code Quality Check with SonarQube
         stage('SonarQube Analysis') {
