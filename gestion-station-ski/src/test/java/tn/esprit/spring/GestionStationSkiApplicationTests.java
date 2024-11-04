@@ -1,7 +1,6 @@
 package tn.esprit.spring.entities;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -56,7 +55,8 @@ public class SkierTest {
 
     @Test
     public void testSetAndGetSubscription() {
-        Subscription subscription = mock(Subscription.class);
+        // Assuming Subscription is a simple class without DB interaction.
+        Subscription subscription = new Subscription(); // Replace with appropriate constructor if needed.
         skier.setSubscription(subscription);
         assertEquals(subscription, skier.getSubscription());
     }
@@ -64,7 +64,7 @@ public class SkierTest {
     @Test
     public void testSetAndGetPistes() {
         Set<Piste> expectedPistes = new HashSet<>();
-        expectedPistes.add(mock(Piste.class));
+        expectedPistes.add(new Piste()); // Use the default constructor of Piste or provide necessary params.
         skier.setPistes(expectedPistes);
         assertEquals(expectedPistes, skier.getPistes());
     }
@@ -72,8 +72,9 @@ public class SkierTest {
     @Test
     public void testSetAndGetRegistrations() {
         Set<Registration> expectedRegistrations = new HashSet<>();
-        expectedRegistrations.add(mock(Registration.class));
+        expectedRegistrations.add(new Registration()); // Use the default constructor of Registration or provide necessary params.
         skier.setRegistrations(expectedRegistrations);
         assertEquals(expectedRegistrations, skier.getRegistrations());
     }
 }
+
