@@ -27,45 +27,46 @@ pipeline {
         stage('ARTIFACT CONSTRUCTION') {
             steps {
                 echo 'Building Maven package...'
-                sh 'mvn -f gestion-station-ski/pom.xml package -Dmaven.test.skip=true -P test-coverage' // Ensure correct path
+                sh 'mvn -f gestion-station-ski/pom.xml package -Dmaven.test.skip=true -P test-coverage'
             }
         }
 
-//4. SonarQube 
-stage('SonarQube') {
+        // 4. SonarQube Analysis
+        stage('SonarQube') {
             steps {
-                echo 'Analyse the quality of code : ';
-                sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=123BIZERTE@cab456';
+                echo 'Analyzing code quality with SonarQube...'
+                sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=123BIZERTE@cab456'
             }
         }
-// Maven Package
+
+        // 5. Maven Package
         stage('Maven Package') {
             steps {
-                echo 'Création du livrable : ';
-                sh 'mvn package -DskipTests';
+                echo 'Creating the Maven package...'
+                sh 'mvn package -DskipTests'
             }
         }
 
-         stage('Deploy to Nexus') {
+        // 6. Deploy to Nexus
+        stage('Deploy to Nexus') {
             steps {
-                echo 'Déploiement sur Nexus : '
+                echo 'Deploying artifact to Nexus...'
                 sh 'mvn deploy -DskipTests'
             }
         }
 
-
-        // 4. Docker Image Creation
+        // 7. Docker Image Creation
         stage('Docker Image Creation') {
             steps {
-                echo 'Building Docker Image...'
+                echo 'Building Docker image...'
                 sh 'docker build -t 5ds2-g4-skistation .'
             }
         }
 
-        // 5. Push Docker Image to Docker Hub
+        // 8. Push Docker Image to Docker Hub
         stage('Push Docker Image to Docker Hub') {
             steps {
-                echo 'Pushing Docker Image to Docker Hub...'
+                echo 'Pushing Docker image to Docker Hub...'
                 withCredentials([usernamePassword(credentialsId: 'dockerHub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh '''
                         echo "Logging into Docker Hub..."
@@ -76,30 +77,23 @@ stage('SonarQube') {
             }
         }
 
-        // 6. Maven Tests
+        // 9. Maven Tests
         stage('MVN TESTS') {
             steps {
-                echo "Maven Test";
+                echo "Running Maven tests..."
+                sh 'mvn test'
             }
         }
 
-        // 7. Deploy to Nexus Repository
-        stage('Nexus Deployment') {
-            steps {
-                echo 'Deploying to Nexus...'
-                sh 'mvn -f gestion-station-ski/pom.xml deploy -DskipTests'
-            }
-        }
-
-        // 8. Docker Compose to Launch Services
+        // 10. Docker Compose to Launch Services
         stage('Docker Compose Setup') {
             steps {
                 echo 'Starting services with Docker Compose...'
-                sh 'docker compose up -d'
+                sh 'docker-compose up -d'
             }
         }
 
-        // 9. Launch Prometheus
+        // 11. Launch Prometheus
         stage('Launch Prometheus') {
             steps {
                 echo 'Starting Prometheus for monitoring...'
@@ -107,7 +101,7 @@ stage('SonarQube') {
             }
         }
 
-        // 10. Launch Grafana
+        // 12. Launch Grafana
         stage('Launch Grafana') {
             steps {
                 echo 'Starting Grafana for visualization...'
@@ -115,7 +109,7 @@ stage('SonarQube') {
             }
         }
 
-        // 11. Check Database Connection
+        // 13. Check Database Connection
         stage('CHECK DATABASE CONNECTION') {
             steps {
                 script {
@@ -124,7 +118,6 @@ stage('SonarQube') {
                         def dbHost = 'your_database_host' // Replace with your actual database host
                         def dbPort = 'your_database_port' // Replace with your actual database port
 
-                        // Attempt to connect to the database
                         try {
                             sh """
                                 echo "SELECT 1;" | mysql -h ${dbHost} -P ${dbPort} -u ${DB_USER} -p${DB_PASSWORD}
@@ -137,13 +130,4 @@ stage('SonarQube') {
             }
         }
 
-        // 12. JUnit Test Execution
-        stage('Unit Testing with JUnit') {
-            steps {
-                echo 'Executing Unit Tests...'
-                sh 'mvn test'
-            }
-        }
-    }
-}
-
+        // 14. Unit Testing with JUni
