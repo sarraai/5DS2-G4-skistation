@@ -36,8 +36,9 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 echo 'Running SonarQube analysis...'
-                dir('gestion-station-ski/gestion-station-ski') { // Adjust path for SonarQube analysis
-                    sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=123BIZERTE@cab456'
+                dir('/var/lib/jenkins/workspace/pipeline/gestion-station-ski') {
+    sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=123BIZERTE@cab456'
+}
                 }
             }
         }
