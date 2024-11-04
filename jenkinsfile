@@ -45,7 +45,7 @@ stage('MVN VERIFY') {
         stage('Docker Image Creation') {
             steps {
                 echo 'Building Docker Image...'
-                sh 'docker build -t sarraai/5DS2-G4-skistation:1.0.0 .'
+                sh 'docker build -t sarraai/5ds2-g4-skistation:1.0.0 .'
             }
         }
 
