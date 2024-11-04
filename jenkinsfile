@@ -31,6 +31,8 @@ pipeline {
             }
         }
 
+
+
 stage('MVN VERIFY') {
     steps {
         echo 'Running Maven verify...'
