@@ -32,13 +32,11 @@ pipeline {
             }
         }
 
-        // 4. Code Quality Check with SonarQube
-        stage('SonarQube Analysis') {
+       // 4. Maven Tests
+        stage('MVN TESTS') {
             steps {
-                echo 'Running SonarQube analysis...'
-                dir('/var/lib/jenkins/workspace/pipeline/gestion-station-ski') {
-                    sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=123BIZERTE@cab456'
-                }
+                echo 'Running Maven tests...'
+                sh 'mvn test' // Execute Maven tests
             }
         }
 
