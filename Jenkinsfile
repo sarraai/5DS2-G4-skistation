@@ -63,18 +63,20 @@ stage('SonarQube') {
         }
 
         // 5. Push Docker Image to Docker Hub
-        stage('Push Docker Image to Docker Hub') {
-            steps {
-                echo 'Pushing Docker Image to Docker Hub...'
-                withCredentials([usernamePassword(credentialsId: 'dockerHub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                    sh '''
-                        echo "Logging into Docker Hub..."
-                        docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-                        docker push sarraai/5DS2-G4-skistation:1.0.0
-                    '''
-                }
-            }
+       stage('Push Docker Image to Docker Hub') {
+    steps {
+        echo 'Pushing Docker Image to Docker Hub...'
+        withCredentials([usernamePassword(credentialsId: 'dockerHub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+            sh '''
+                echo "Logging into Docker Hub..."
+                echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+                docker push sarraai/5DS2-G4-skistation:1.0.0
+            '''
         }
+    }
+}
+
+
 
         // 6. Maven Tests
         stage('MVN TESTS') {
