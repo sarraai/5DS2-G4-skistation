@@ -105,7 +105,7 @@ stage('Launch Prometheus') {
                     docker stop prometheus || true
                     docker rm prometheus || true
                 fi
-                docker run -d --name prometheus -p 9090:9090 -v /home/vagrant/docker/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
+                docker run -d --name prometheus -p 9091:9090 -v /home/vagrant/docker/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
             '''
         }
     }
