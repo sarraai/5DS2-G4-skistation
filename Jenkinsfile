@@ -113,15 +113,24 @@ stage('Launch Prometheus') {
 
     
 
-        // 12. Launch Grafana (Commented Out)
     
-        stage('Launch Grafana') {
-            steps {
-                echo 'Starting Grafana for visualization...'
-                sh 'docker run -d --name grafana -p 3001:3000 grafana/grafana'
-            }
+        // Launch Grafana
+stage('Launch Grafana') {
+    steps {
+        script {
+            echo 'Starting Grafana for visualization...'
+            // Check if the Grafana container exists and remove it if it does
+            sh '''
+                if [ "$(docker ps -aq -f name=grafana)" ]; then
+                    docker stop grafana || true
+                    docker rm grafana || true
+                fi
+                docker run -d --name grafana -p 3001:3000 grafana/grafana
+            '''
         }
-        
+    }
+}
+
 
         // 13. Unit Testing with JUnit
         stage('Unit Testing with JUnit') {
