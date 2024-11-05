@@ -116,14 +116,18 @@ stage('Launch Grafana') {
 */
 
         // 13. Unit Testing with JUnit
-        stage('Unit Testing with JUnit') {
-            steps {
-                echo 'Executing Unit Tests...'
-                sh 'mvn test'
-            }
-        }
+stage('Unit Testing with JUnit') {
+    steps {
+        echo 'Executing Unit Tests...'
+        // Optional: Run the tests with more output and fail on errors
+        sh 'mvn test -DskipITs' // This will skip integration tests if you have them and focus on unit tests
+        
+        // Optionally, check for test reports
+        echo 'Checking test results...'
+        sh 'mvn surefire-report:report' // Generate test reports (if you want to review them in Jenkins)
     }
 }
+
 
 
 
