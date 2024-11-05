@@ -82,7 +82,7 @@ pipeline {
             }
         }
 
-        // 11. Launch Prometheus
+        // 10. Launch Prometheus
         stage('Launch Prometheus') {
             steps {
                 script {
@@ -99,7 +99,7 @@ pipeline {
             }
         }
 
-        // 12. Launch Grafana
+        // 11. Launch Grafana
         stage('Launch Grafana') {
             steps {
                 script {
@@ -116,7 +116,7 @@ pipeline {
             }
         }
 
-        // 13. Unit Testing with JUnit
+        // 12. Unit Testing with JUnit
         stage('Unit Testing with JUnit') {
             steps {
                 echo 'Executing Unit Tests...'
@@ -129,23 +129,26 @@ pipeline {
             }
         }
 
-        // 14. Docker Compose Setup
+        // 13. Docker Compose Setup
         stage('Docker Compose Setup') {
             steps {
                 echo 'Starting services with Docker Compose...'
                 dir('/home/vagrant/docker') { // Navigate to the directory containing docker-compose.yml
-                    sh 'docker-compose up -d' // Run Docker Compose
+                    sh 'docker-compose up -d' // Run Docker Compose in detached mode
                 }
             }
             post {
                 always {
                     echo 'Stopping and cleaning up Docker Compose services...'
-                    sh 'docker-compose down' // Stops and removes the containers after the stage completes
+                    dir('/home/vagrant/docker') { // Ensure we're in the right directory
+                        sh 'docker-compose down' // Stops and removes the containers after the stage completes
+                    }
                 }
             }
         }
     }
 }
+
 
 
 
