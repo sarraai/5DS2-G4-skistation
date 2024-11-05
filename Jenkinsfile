@@ -82,7 +82,7 @@ pipeline {
             }
         }
 
-        // 10. Launch Prometheus
+        // 11. Launch Prometheus
         stage('Launch Prometheus') {
             steps {
                 script {
@@ -99,7 +99,7 @@ pipeline {
             }
         }
 
-        // 11. Launch Grafana
+        // 12. Launch Grafana
         stage('Launch Grafana') {
             steps {
                 script {
@@ -116,7 +116,7 @@ pipeline {
             }
         }
 
-        // 12. Unit Testing with JUnit
+        // 13. Unit Testing with JUnit
         stage('Unit Testing with JUnit') {
             steps {
                 echo 'Executing Unit Tests...'
@@ -129,42 +129,55 @@ pipeline {
             }
         }
 
-        // 13. Docker Compose Setup
+        // 14. Docker Compose Setup
         stage('Docker Compose Setup') {
             steps {
                 echo 'Starting services with Docker Compose...'
                 dir('/home/vagrant/docker') { // Navigate to the directory containing docker-compose.yml
                     // Check if docker-compose.yml exists before running the command
-                    sh '''
-                        if [ -f docker-compose.yml ]; then
-                            echo "Starting services..."
-                            docker-compose up -d
-                        else
-                            echo "docker-compose.yml not found!"
-                            exit 1
-                        fi
-                    ''' // Run Docker Compose in detached mode
+                    if (fileExists('docker-compose.yml')) {
+                        echo 'docker-compose.yml found, starting services...'
+                        sh 'docker-compose up -d' // Run Docker Compose
+                    } else {
+                        error 'docker-compose.yml not found!'
+                    }
                 }
             }
             post {
                 always {
                     echo 'Stopping and cleaning up Docker Compose services...'
-                    dir('/home/vagrant/docker') { // Ensure we're in the right directory
-                        // Check for successful execution of down
-                        sh '''
-                            if [ -f docker-compose.yml ]; then
-                                echo "Stopping services..."
-                                docker-compose down
-                            else
-                                echo "docker-compose.yml not found! Cannot stop services."
-                            fi
-                        ''' // Stops and removes the containers after the stage completes
+                    dir('/home/vagrant/docker') { // Ensure you're in the correct directory
+                        sh 'docker-compose down' // Stops and removes the containers after the stage completes
+                    }
+                }
+            }
+        }
+
+        // 15. Docker Compose Up
+        stage('Docker Compose Up') {
+            steps {
+                script {
+                    // Navigate to the directory containing docker-compose.yml
+                    dir('/home/vagrant/docker') {
+                        // Check if docker-compose.yml exists before running the command
+                        if (fileExists('docker-compose.yml')) {
+                            echo 'Starting services with Docker Compose...'
+                            // Execute docker-compose up
+                            sh """
+                                export REGISTRY=${registry}
+                                export BUILD_NUMBER=${env.BUILD_NUMBER}
+                                docker-compose up -d
+                            """
+                        } else {
+                            error 'docker-compose.yml not found!'
+                        }
                     }
                 }
             }
         }
     }
 }
+
 
 
 
