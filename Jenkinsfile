@@ -68,7 +68,7 @@ stage('Push Docker Image to Docker Hub') {
     steps {
         echo 'Pushing Docker Image to Docker Hub...';
         // Log in to Docker Hub
-        sh 'docker login -u sarra.aissaoui@esprit.tn -p 123cab456'; 
+        sh 'docker login -u sarraaissaoui -p 123cab456'; 
         // Push the Docker image
         sh 'docker push sarraaissaoui/skistation:1.0.0'; 
     }
