@@ -93,24 +93,24 @@ stage('Push Docker Image to Docker Hub') {
         
 
         // 11. Launch Prometheus (Commented Out)
-        /*
+        
         stage('Launch Prometheus') {
             steps {
                 echo 'Starting Prometheus for monitoring...'
                 sh 'docker run -d --name prometheus -p 9090:9090 prom/prometheus'
             }
         }
-        */
+    
 
         // 12. Launch Grafana (Commented Out)
-        /*
+    
         stage('Launch Grafana') {
             steps {
                 echo 'Starting Grafana for visualization...'
                 sh 'docker run -d --name grafana -p 3000:3000 grafana/grafana'
             }
         }
-        */
+        
 
         // 13. Unit Testing with JUnit
         stage('Unit Testing with JUnit') {
