@@ -84,14 +84,13 @@ stage('Push Docker Image to Docker Hub') {
         }
 
         // 10. Docker Compose to Launch Services (Commented Out)
-        /*
         stage('Docker Compose Setup') {
             steps {
                 echo 'Starting services with Docker Compose...'
                 sh 'docker-compose up -d'
             }
         }
-        */
+        *
 
         // 11. Launch Prometheus (Commented Out)
         /*
