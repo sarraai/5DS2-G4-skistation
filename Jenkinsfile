@@ -56,7 +56,6 @@ pipeline {
         }
 
         // 7. Docker Image Creation
-        
         stage('Docker Image Creation') {
             steps {
                 echo 'Building Docker Image...'
@@ -64,7 +63,8 @@ pipeline {
             }
         }
         
-        // 8. Push Docker Image to Docker Hub
+        // 8. Push Docker Image to Docker Hub (Commented Out)
+        /*
         stage('BUILDING IMAGE') {
             steps {
                 script {
@@ -72,6 +72,7 @@ pipeline {
                 }
             }
         }
+        */
 
         // 9. Run Maven Tests
         stage('Run Maven Tests') {
@@ -114,6 +115,7 @@ pipeline {
         }
     }
 }
+
 
 
 
