@@ -64,18 +64,17 @@ pipeline {
         }
         
         // 8. Push Docker Image to Docker Hub (Commented Out)
-        /*
         stage('Push Docker Image to Docker Hub') {
-            steps {
-                script {
-                    dockerImage = docker.build("${registry}:${BUILD_NUMBER}")
-                    docker.withRegistry("https://${registry}", registryCredential) {
-                        dockerImage.push()
-                    }
-                }
+    steps {
+        script {
+            dockerImage = docker.build("sarraaissaoui/skistation:1.0.0") // Specify the image and tag
+            docker.withRegistry("https://index.docker.io/v1/", registryCredential) {
+                dockerImage.push() // Push the image
             }
         }
-        */
+    }
+}
+
 
         // 9. Run Maven Tests
         stage('Run Maven Tests') {
