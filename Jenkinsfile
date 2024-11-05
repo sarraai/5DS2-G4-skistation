@@ -2,7 +2,7 @@ pipeline {
     environment {
         registry = "sarraai/skiexam"
         registryCredential = 'dockerHub'
-        dockerImage = ''
+        dockerImage = ''  // Consider assigning a meaningful value if used
     }
     agent any
 
@@ -27,65 +27,60 @@ pipeline {
         stage('COMPILATION') {
             steps {
                 echo 'Building Maven package...'
-                sh 'mvn compile' // Ensure correct path
+                sh 'mvn compile'
             }
         }
 
-//4. SonarQube 
-stage('SonarQube') {
+        // 4. SonarQube
+        stage('SonarQube') {
             steps {
-                echo 'Analyse the quality of code : ';
-                sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=123BIZERTE@cab456';
+                echo 'Analyzing the quality of code...'
+                sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=123BIZERTE@cab456'
             }
         }
 
+        // 5. Maven Package
         stage('Maven Package') {
             steps {
-                echo 'Création du livrable : ';
-                sh 'mvn package -DskipTests';
+                echo 'Creating deliverable...'
+                sh 'mvn package -DskipTests'
             }
         }
 
-         stage('Deploy to Nexus') {
+        // 6. Deploy to Nexus
+        stage('Deploy to Nexus') {
             steps {
-                echo 'Déploiement sur Nexus : '
+                echo 'Deploying to Nexus...'
                 sh 'mvn deploy -DskipTests'
             }
         }
 
-
-        // 4. Docker Image Creation
+        // 7. Docker Image Creation
         stage('Docker Image Creation') {
             steps {
                 echo 'Building Docker Image...'
-                sh 'docker build -t sarraaissaoui/skistation:1.0.0 .';
+                sh 'docker build -t sarraaissaoui/skistation:1.0.0 .'
             }
         }
 
-       
-  // 5. Push Docker Image to Docker Hub
-stage('BUILDING IMAGE') {
-    steps {
-        script {
-            dockerImage = docker.build registry + ":$BUILD_NUMBER"
-        }
-    }
-}
+        // 8. Push Docker Image to Docker Hub
+        stage('Push Docker Image to Docker Hub') {
+            steps {
+                script {
+                    dockerImage = docker.build("${registry}:${BUILD_NUMBER}")
+                }
+            }
+        }
 
+        // 9. Run Maven Tests
+        stage('Run Maven Tests') {
+            steps {
+                echo 'Running Maven tests...'
+                sh 'mvn test'
+            }
+        }
 
-
-    // 6. Run Maven Tests
-stage('Run Maven Tests') {
-    steps {
-        echo 'Running Maven tests...'
-        sh 'mvn test'
-    }
-}
-
-
-        
-
-        // 8. Docker Compose to Launch Services
+        // 10. Docker Compose to Launch Services
         stage('Docker Compose Setup') {
             steps {
                 echo 'Starting services with Docker Compose...'
@@ -93,7 +88,7 @@ stage('Run Maven Tests') {
             }
         }
 
-        // 9. Launch Prometheus
+        // 11. Launch Prometheus
         stage('Launch Prometheus') {
             steps {
                 echo 'Starting Prometheus for monitoring...'
@@ -101,23 +96,12 @@ stage('Run Maven Tests') {
             }
         }
 
-        // 10. Launch Grafana
+        // 12. Launch Grafana
         stage('Launch Grafana') {
             steps {
                 echo 'Starting Grafana for visualization...'
                 sh 'docker run -d --name grafana -p 3000:3000 grafana/grafana'
             }
-        }
+ 
 
-       
-
-        // 12. JUnit Test Execution
-        stage('Unit Testing with JUnit') {
-            steps {
-                echo 'Executing Unit Tests...'
-                sh 'mvn test'
-            }
-        }
-    }
-}
 
