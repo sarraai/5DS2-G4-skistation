@@ -83,14 +83,7 @@ stage('Push Docker Image to Docker Hub') {
             }
         }
 
-    //    stage('Docker Compose Setup') {
-   /* steps {
-        echo 'Starting services with Docker Compose...'
-        dir('/home/vagrant/docker') { // Navigate to the directory containing docker-compose.yml
-            sh 'docker-compose up -d' // Run Docker Compose
-        }
-    }
-} */
+  
 
         
 
@@ -132,6 +125,9 @@ stage('Launch Grafana') {
 }
 
 
+    
+
+
         // 13. Unit Testing with JUnit
         stage('Unit Testing with JUnit') {
             steps {
@@ -146,9 +142,15 @@ stage('Launch Grafana') {
         }
     }
 }
-
-
-
+  
+    //    stage('Docker Compose Setup') {
+    steps {
+        echo 'Starting services with Docker Compose...'
+        dir('/home/vagrant/docker') { // Navigate to the directory containing docker-compose.yml
+            sh 'docker-compose up -d' // Run Docker Compose
+        }
+    }
+} 
 
 
 
