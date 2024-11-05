@@ -94,14 +94,23 @@ stage('Push Docker Image to Docker Hub') {
 
         
 
-        // 11. Launch Prometheus (Commented Out)
-        
-        stage('Launch Prometheus') {
-            steps {
-                echo 'Starting Prometheus for monitoring...'
-                sh 'docker run -d --name prometheus -p 9090:9090 prom/prometheus'
-            }
+        // 11. Launch Prometheus
+stage('Launch Prometheus') {
+    steps {
+        script {
+            echo 'Starting Prometheus for monitoring...'
+            // Check if the Prometheus container exists and remove it if it does
+            sh '''
+                if [ "$(docker ps -aq -f name=prometheus)" ]; then
+                    docker stop prometheus || true
+                    docker rm prometheus || true
+                fi
+                docker run -d --name prometheus -p 9090:9090 -v /home/vagrant/docker/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
+            '''
         }
+    }
+}
+
     
 
         // 12. Launch Grafana (Commented Out)
