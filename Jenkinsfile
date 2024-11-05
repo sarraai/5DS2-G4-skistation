@@ -56,15 +56,14 @@ pipeline {
         }
 
         // 7. Docker Image Creation
-        /*
+        
         stage('Docker Image Creation') {
             steps {
                 echo 'Building Docker Image...'
                 sh 'docker build -t sarraaissaoui/skistation:1.0.0 .'
             }
         }
-        */
-
+        
         // 8. Push Docker Image to Docker Hub
         stage('BUILDING IMAGE') {
             steps {
