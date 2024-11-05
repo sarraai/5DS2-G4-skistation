@@ -95,32 +95,25 @@ pipeline {
         // 11. Launch Prometheus
         
 
-        // 12. Launch Grafana
         // 11. Launch Prometheus
+/*
 stage('Launch Prometheus') {
     steps {
         echo 'Starting Prometheus for monitoring...'
-        script {
-            // Run Prometheus container with a different name
-            def result = sh(script: 'docker run -d --name prometheus_new -p 9090:9090 prom/prometheus', returnStatus: true)
-            
-            // Check if the container started successfully
-            if (result != 0) {
-                error 'Failed to start Prometheus container!'
-            }
-
-            // Wait for Prometheus to be ready
-            sleep 10 // Wait for 10 seconds for Prometheus to start
-
-            // Check if Prometheus is running
-            def isRunning = sh(script: 'docker ps | grep prometheus_new', returnStatus: true)
-            if (isRunning != 0) {
-                error 'Prometheus container is not running!'
-            }
-        }
+        sh 'docker run -d --name prometheus -p 9090:9090 prom/prometheus'
     }
 }
+*/
 
+// 12. Launch Grafana
+/*
+stage('Launch Grafana') {
+    steps {
+        echo 'Starting Grafana for visualization...'
+        sh 'docker run -d --name grafana -p 3000:3000 grafana/grafana'
+    }
+}
+*/
 
         // 13. Unit Testing with JUnit
         stage('Unit Testing with JUnit') {
