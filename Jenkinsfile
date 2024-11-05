@@ -118,7 +118,7 @@ stage('Launch Prometheus') {
         stage('Launch Grafana') {
             steps {
                 echo 'Starting Grafana for visualization...'
-                sh 'docker run -d --name grafana -p 3000:3000 grafana/grafana'
+                sh 'docker run -d --name grafana -p 3001:3000 grafana/grafana'
             }
         }
         
