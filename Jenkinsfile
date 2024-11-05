@@ -134,20 +134,38 @@ pipeline {
             steps {
                 echo 'Starting services with Docker Compose...'
                 dir('/home/vagrant/docker') { // Navigate to the directory containing docker-compose.yml
-                    sh 'docker-compose up -d' // Run Docker Compose in detached mode
+                    // Check if docker-compose.yml exists before running the command
+                    sh '''
+                        if [ -f docker-compose.yml ]; then
+                            echo "Starting services..."
+                            docker-compose up -d
+                        else
+                            echo "docker-compose.yml not found!"
+                            exit 1
+                        fi
+                    ''' // Run Docker Compose in detached mode
                 }
             }
             post {
                 always {
                     echo 'Stopping and cleaning up Docker Compose services...'
                     dir('/home/vagrant/docker') { // Ensure we're in the right directory
-                        sh 'docker-compose down' // Stops and removes the containers after the stage completes
+                        // Check for successful execution of down
+                        sh '''
+                            if [ -f docker-compose.yml ]; then
+                                echo "Stopping services..."
+                                docker-compose down
+                            else
+                                echo "docker-compose.yml not found! Cannot stop services."
+                            fi
+                        ''' // Stops and removes the containers after the stage completes
                     }
                 }
             }
         }
     }
 }
+
 
 
 
