@@ -83,13 +83,15 @@ stage('Push Docker Image to Docker Hub') {
             }
         }
 
-        // 10. Docker Compose to Launch Services (Commented Out)
         stage('Docker Compose Setup') {
-            steps {
-                echo 'Starting services with Docker Compose...'
-                sh 'docker-compose up -d'
-            }
+    steps {
+        echo 'Starting services with Docker Compose...'
+        dir('/home/vagrant/docker') { // Navigate to the directory containing docker-compose.yml
+            sh 'docker-compose up -d' // Run Docker Compose
         }
+    }
+}
+
         
 
         // 11. Launch Prometheus (Commented Out)
