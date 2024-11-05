@@ -2,7 +2,7 @@ pipeline {
     environment {
         registry = "sarraai/skiexam"
         registryCredential = 'dockerHub'
-        dockerImage = ''  // Consider assigning a meaningful value if used
+        dockerImage = ''
     }
     agent any
 
@@ -27,11 +27,11 @@ pipeline {
         stage('COMPILATION') {
             steps {
                 echo 'Building Maven package...'
-                sh 'mvn compile'
+                sh 'mvn compile' // Ensure correct path
             }
         }
 
-        // 4. SonarQube
+        // 4. SonarQube 
         stage('SonarQube') {
             steps {
                 echo 'Analyzing the quality of code...'
@@ -56,15 +56,17 @@ pipeline {
         }
 
         // 7. Docker Image Creation
+        /*
         stage('Docker Image Creation') {
             steps {
                 echo 'Building Docker Image...'
                 sh 'docker build -t sarraaissaoui/skistation:1.0.0 .'
             }
         }
+        */
 
         // 8. Push Docker Image to Docker Hub
-        stage('Push Docker Image to Docker Hub') {
+        stage('BUILDING IMAGE') {
             steps {
                 script {
                     dockerImage = docker.build("${registry}:${BUILD_NUMBER}")
@@ -102,6 +104,17 @@ pipeline {
                 echo 'Starting Grafana for visualization...'
                 sh 'docker run -d --name grafana -p 3000:3000 grafana/grafana'
             }
- 
+        }
+
+        // 13. Unit Testing with JUnit
+        stage('Unit Testing with JUnit') {
+            steps {
+                echo 'Executing Unit Tests...'
+                sh 'mvn test'
+            }
+        }
+    }
+}
+
 
 
