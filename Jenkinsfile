@@ -82,13 +82,15 @@ pipeline {
             }
         }
 
-        // 10. Docker Compose to Launch Services
+        // 10. Docker Compose to Launch Services (Commented Out)
+        /*
         stage('Docker Compose Setup') {
             steps {
                 echo 'Starting services with Docker Compose...'
                 sh 'docker compose up -d'
             }
         }
+        */
 
         // 11. Launch Prometheus
         stage('Launch Prometheus') {
@@ -115,6 +117,7 @@ pipeline {
         }
     }
 }
+
 
 
 
