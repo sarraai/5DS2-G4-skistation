@@ -63,15 +63,14 @@ pipeline {
             }
         }
         
-        // 8. Push Docker Image to Docker Hub (Commented Out)
-        stage('Push Docker Image to Docker Hub') {
+        // 8. Push Docker Image to Docker Hub
+stage('Push Docker Image to Docker Hub') {
     steps {
-        script {
-            dockerImage = docker.build("sarraaissaoui/skistation:1.0.0") // Specify the image and tag
-            docker.withRegistry("https://index.docker.io/v1/", sarraai) {
-                dockerImage.push() // Push the image
-            }
-        }
+        echo 'Pushing Docker Image to Docker Hub...';
+        // Log in to Docker Hub
+        sh 'docker login -u sarra.aissaoui@esprit.tn -p 123cab456'; 
+        // Push the Docker image
+        sh 'docker push sarraaissaoui/skistation:1.0.0'; 
     }
 }
 
