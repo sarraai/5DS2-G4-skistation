@@ -65,10 +65,13 @@ pipeline {
         
         // 8. Push Docker Image to Docker Hub (Commented Out)
         /*
-        stage('BUILDING IMAGE') {
+        stage('Push Docker Image to Docker Hub') {
             steps {
                 script {
                     dockerImage = docker.build("${registry}:${BUILD_NUMBER}")
+                    docker.withRegistry("https://${registry}", registryCredential) {
+                        dockerImage.push()
+                    }
                 }
             }
         }
@@ -87,46 +90,46 @@ pipeline {
         stage('Docker Compose Setup') {
             steps {
                 echo 'Starting services with Docker Compose...'
-                sh 'docker compose up -d'
+                sh 'docker-compose up -d'
             }
         }
         */
 
-        // 11. Launch Prometheus
-        
+        // 11. Launch Prometheus (Commented Out)
+        /*
+        stage('Launch Prometheus') {
+            steps {
+                echo 'Starting Prometheus for monitoring...'
+                sh 'docker run -d --name prometheus -p 9090:9090 prom/prometheus'
+            }
+        }
+        */
 
-        // 11. Launch Prometheus
-/*
-stage('Launch Prometheus') {
-    steps {
-        echo 'Starting Prometheus for monitoring...'
-        sh 'docker run -d --name prometheus -p 9090:9090 prom/prometheus'
-    }
-}
-*/
-
-// 12. Launch Grafana
-/*
-stage('Launch Grafana') {
-    steps {
-        echo 'Starting Grafana for visualization...'
-        sh 'docker run -d --name grafana -p 3000:3000 grafana/grafana'
-    }
-}
-*/
+        // 12. Launch Grafana (Commented Out)
+        /*
+        stage('Launch Grafana') {
+            steps {
+                echo 'Starting Grafana for visualization...'
+                sh 'docker run -d --name grafana -p 3000:3000 grafana/grafana'
+            }
+        }
+        */
 
         // 13. Unit Testing with JUnit
-stage('Unit Testing with JUnit') {
-    steps {
-        echo 'Executing Unit Tests...'
-        // Optional: Run the tests with more output and fail on errors
-        sh 'mvn test -DskipITs' // This will skip integration tests if you have them and focus on unit tests
-        
-        // Optionally, check for test reports
-        echo 'Checking test results...'
-        sh 'mvn surefire-report:report' // Generate test reports (if you want to review them in Jenkins)
+        stage('Unit Testing with JUnit') {
+            steps {
+                echo 'Executing Unit Tests...'
+                // Run the tests with more output and skip integration tests
+                sh 'mvn test -DskipITs' 
+                
+                // Optionally, check for test reports
+                echo 'Checking test results...'
+                sh 'mvn surefire-report:report' // Generate test reports (if you want to review them in Jenkins)
+            }
+        }
     }
 }
+
 
 
 
