@@ -146,5 +146,31 @@ pipeline {
                 }
             }
         }
+
+        // 14. Docker Compose Up
+        /*
+        stage('Docker Compose Up') {
+            steps {
+                script {
+                    // Navigate to the directory containing docker-compose.yml
+                    dir('/home/vagrant/docker') {
+                        // Check if docker-compose.yml exists before running the command
+                        if (fileExists('docker-compose.yml')) {
+                            echo 'Starting services with Docker Compose...'
+                            // Execute docker-compose up
+                            sh """
+                                export REGISTRY=${registry}
+                                export BUILD_NUMBER=${env.BUILD_NUMBER}
+                                docker-compose up -d
+                            """
+                        } else {
+                            error 'docker-compose.yml not found!'
+                        }
+                    }
+                }
+            }
+        }
+        */
     }
 }
+
