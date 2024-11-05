@@ -68,7 +68,7 @@ pipeline {
     steps {
         script {
             dockerImage = docker.build("sarraaissaoui/skistation:1.0.0") // Specify the image and tag
-            docker.withRegistry("https://index.docker.io/v1/", registryCredential) {
+            docker.withRegistry("https://index.docker.io/v1/", sarraai) {
                 dockerImage.push() // Push the image
             }
         }
