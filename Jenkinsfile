@@ -134,55 +134,17 @@ pipeline {
             steps {
                 echo 'Starting services with Docker Compose...'
                 dir('/home/vagrant/docker') { // Navigate to the directory containing docker-compose.yml
-                    // Check if docker-compose.yml exists before running the command
-                    if (fileExists('docker-compose.yml')) {
-                        echo 'docker-compose.yml found, starting services...'
-                        sh 'docker-compose up -d' // Run Docker Compose
-                    } else {
-                        error 'docker-compose.yml not found!'
-                    }
+                    sh 'docker-compose up -d' // Run Docker Compose in detached mode
                 }
             }
             post {
                 always {
                     echo 'Stopping and cleaning up Docker Compose services...'
-                    dir('/home/vagrant/docker') { // Ensure you're in the correct directory
+                    dir('/home/vagrant/docker') { // Ensure we're in the right directory
                         sh 'docker-compose down' // Stops and removes the containers after the stage completes
-                    }
-                }
-            }
-        }
-
-        // 14. Docker Compose Up
-        stage('Docker Compose Up') {
-            steps {
-                script {
-                    // Navigate to the directory containing docker-compose.yml
-                    dir('/home/vagrant/docker') {
-                        // Check if docker-compose.yml exists before running the command
-                        if (fileExists('docker-compose.yml')) {
-                            echo 'Starting services with Docker Compose...'
-                            // Execute docker-compose up
-                            sh """
-                                export REGISTRY=${registry}
-                                export BUILD_NUMBER=${env.BUILD_NUMBER}
-                                docker-compose up -d
-                            """
-                        } else {
-                            error 'docker-compose.yml not found!'
-                        }
                     }
                 }
             }
         }
     }
 }
-
-
-
-
-
-
-
-
-
